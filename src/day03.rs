@@ -4,7 +4,7 @@ use regex::Regex;
 #[derive(Debug, PartialEq)]
 enum Command {
     Mul(i32, i32),
-    Do, 
+    Do,
     Dont,
 }
 
@@ -39,29 +39,24 @@ impl Command {
 #[aoc(day3, part1)]
 pub fn part1(input: &str) -> i32 {
     let commands = Command::parse(input);
-    let mut result = 0;
-    for command in commands.iter() {
-        result += command.execute();
-    }
 
-    result
+    commands
+        .iter()
+        .fold(0, |acc, command| acc + command.execute())
 }
 
 #[aoc(day3, part2)]
 pub fn part2(input: &str) -> i32 {
     let commands = Command::parse(input);
 
-    let mut result = 0;
-    let mut state = true;
-    for command in commands {
-        if command == Command::Do {
-            state = true;
-        } else if command == Command::Dont {
-            state = false;
-        } else if state {
-            result += command.execute();
-        }
-    }
+    let (result, _) = commands
+        .iter()
+        .fold((0, true), |(acc, state), command| match command {
+            Command::Do => (acc, true),
+            Command::Dont => (acc, false),
+            _ if state => (acc + command.execute(), state),
+            _ => (acc, state),
+        });
 
     result
 }

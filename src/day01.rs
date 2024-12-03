@@ -32,8 +32,7 @@ fn part2((left, right): &(Vec<i32>, Vec<i32>)) -> i32 {
         acc
     });
 
-    left
-        .iter()
+    left.iter()
         .map(|value| value * hashmap.get(value).unwrap_or(&0))
         .sum()
 }
